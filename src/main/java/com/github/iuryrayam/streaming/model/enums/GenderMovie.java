@@ -1,4 +1,9 @@
 package com.github.iuryrayam.streaming.model.enums;
 
-public class GenderMovie {
+public enum GenderMovie {
+    FICTION,
+    FANTASY,
+    MYSTERY,
+    ROMANCE,
+    DRAMA
 }
