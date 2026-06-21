@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -67,5 +68,29 @@ class MovieRepositoryTest {
 
         System.out.println("Movie: " + movie.getTitle());
         System.out.println("Direcotr: " + movie.getDirector().getName());
+    }
+
+    @Test
+    void findByTitleTest(){
+        List<Movie> spiderMan = repository.findByTitle("Spider man");
+        System.out.println(spiderMan);
+    }
+
+    @Test
+    void findByStudioTest(){
+        List<Movie> listStudio = repository.findByStudio("Capcom");
+        System.out.println(listStudio);
+    }
+
+    @Test
+    void findByTitleAndPriceTest(){
+        List<Movie> list = repository.findByTitleAndPrice("Spider man", BigDecimal.valueOf(200));
+        System.out.println(list);
+    }
+
+    @Test
+    void findByStudioOrPriceTest(){
+        List<Movie> list = repository.findByStudioOrPrice("Marvel", BigDecimal.valueOf(100));
+        System.out.println(list);
     }
 }
