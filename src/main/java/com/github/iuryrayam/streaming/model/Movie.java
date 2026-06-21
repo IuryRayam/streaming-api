@@ -3,6 +3,7 @@ package com.github.iuryrayam.streaming.model;
 import com.github.iuryrayam.streaming.model.enums.GenderMovie;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "movie")
 @Data
+@ToString(exclude = "director")
 public class Movie {
 
     @Id
