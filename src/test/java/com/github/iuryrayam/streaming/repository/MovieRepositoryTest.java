@@ -73,24 +73,70 @@ class MovieRepositoryTest {
     @Test
     void findByTitleTest(){
         List<Movie> spiderMan = repository.findByTitle("Spider man");
-        System.out.println(spiderMan);
+        spiderMan.forEach(System.out::println);
     }
 
     @Test
     void findByStudioTest(){
         List<Movie> listStudio = repository.findByStudio("Capcom");
-        System.out.println(listStudio);
+        listStudio.forEach(System.out::println);
     }
 
     @Test
     void findByTitleAndPriceTest(){
         List<Movie> list = repository.findByTitleAndPrice("Spider man", BigDecimal.valueOf(200));
-        System.out.println(list);
+        list.forEach(System.out::println);
     }
 
     @Test
     void findByStudioOrPriceTest(){
         List<Movie> list = repository.findByStudioOrPrice("Marvel", BigDecimal.valueOf(100));
-        System.out.println(list);
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void listarFilmeOrdenadoPorTituloEPreco(){
+        List<Movie> list = repository.listarFilmesOrdenadoPorTituloEPreco();
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void listarDiretoresDosFilmes(){
+        List<Movie> list = repository.listarDiretoresDosFilmes();
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void listarDiferentesNomes(){
+        List<String> list = repository.listarNomesDiferentesFilmes();
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void listarGenerosDiretoresBrasileiros(){
+        List<Movie> list = repository.listarGenerosDiretoresBrazileiros();
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void findByGenderTest(){
+        List<Movie> list = repository.findByGender(GenderMovie.FICTION, "releaseDate");
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void findByGenderPositionalParameters(){
+        List<Movie> list = repository.findByGenderPositionalParameters(GenderMovie.FICTION, "releaseDate");
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void deleteByGender(){
+        repository.deleteByGender(GenderMovie.FANTASY);
+    }
+
+    @Test
+    void updateReleaseDate(){
+        repository.updateReleaseDate(LocalDate.of(2026, 6, 17));
     }
 }
