@@ -2,7 +2,10 @@ create table director(
     id uuid not null primary key,
     name varchar(100) not null,
     date_of_birth date not null,
-    nationality varchar(50) not null
+    nationality varchar(50) not null,
+    registration_date timestamp,
+    update_date timestamp,
+    id_user uuid
 );
 
 create table movie(
