@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("director")
@@ -65,5 +67,19 @@ public class DirectorController {
 
         service.delete(directorOptional.get());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DirectorDTO>> pesquisa(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "nationality", required = false) String nationality){
+        List<Director> pesquisa = service.pesquisa(name, nationality);
+        List<DirectorDTO> list = pesquisa.stream().map(director -> new DirectorDTO(
+                director.getId(),
+                director.getName(),
+                director.getDateBirth(),
+                director.getNationality()
+        )).toList();
+        return ResponseEntity.ok(list);
     }
 }
