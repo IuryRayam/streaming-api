@@ -21,6 +21,13 @@ public class DirectorService {
         repository.save(director);
     }
 
+    public void update(Director director){
+        if (director.getId() == null){
+            throw new IllegalArgumentException("O director tem que está cadastrado para poder ser atualizado.");
+        }
+        repository.save(director);
+    }
+
     public Optional<Director> buscarPorId(UUID id){
         return repository.findById(id);
     }

@@ -11,7 +11,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("director")
@@ -81,5 +80,23 @@ public class DirectorController {
                 director.getNationality()
         )).toList();
         return ResponseEntity.ok(list);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody DirectorDTO dto){
+        UUID idDirector = UUID.fromString(id);
+        Optional<Director> directorOptional = service.buscarPorId(idDirector);
+
+        if (directorOptional.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        var director = directorOptional.get();
+        director.setName(dto.name());
+        director.setDateBirth(dto.dateBirth());
+        director.setNationality(dto.nationality());
+
+        service.update(director);
+        return ResponseEntity.noContent().build();
     }
 }
