@@ -2,6 +2,7 @@ package com.github.iuryrayam.streaming.service;
 
 import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.repository.DirectorRepository;
+import com.github.iuryrayam.streaming.validator.DirectorValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +13,15 @@ import java.util.UUID;
 public class DirectorService {
 
     private final DirectorRepository repository;
+    private final DirectorValidator validator;
 
-    public DirectorService(DirectorRepository repository){
+    public DirectorService(DirectorRepository repository, DirectorValidator validator){
         this.repository = repository;
+        this.validator = validator;
     }
 
     public void save(Director director){
+        validator.validar(director);
         repository.save(director);
     }
 
@@ -25,6 +29,7 @@ public class DirectorService {
         if (director.getId() == null){
             throw new IllegalArgumentException("O director tem que está cadastrado para poder ser atualizado.");
         }
+        validator.validar(director);
         repository.save(director);
     }
 

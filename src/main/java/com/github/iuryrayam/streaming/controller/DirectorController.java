@@ -1,6 +1,8 @@
 package com.github.iuryrayam.streaming.controller;
 
 import com.github.iuryrayam.streaming.controller.dto.DirectorDTO;
+import com.github.iuryrayam.streaming.controller.dto.ErroResposta;
+import com.github.iuryrayam.streaming.exception.RegistroDuplicadoException;
 import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.service.DirectorService;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +25,22 @@ public class DirectorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody DirectorDTO dto){
-        var director = dto.toEntity();
-        service.save(director);
+    public ResponseEntity<Object> save(@RequestBody DirectorDTO dto){
+        try {
+            var director = dto.toEntity();
+            service.save(director);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(director.getId())
-                .toUri();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(director.getId())
+                    .toUri();
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        } catch (RegistroDuplicadoException e){
+            var erroDTO = ErroResposta.conflito(e.getMessage());
+            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
+        }
     }
 
     @GetMapping("{id}")
@@ -83,20 +90,25 @@ public class DirectorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody DirectorDTO dto){
-        UUID idDirector = UUID.fromString(id);
-        Optional<Director> directorOptional = service.buscarPorId(idDirector);
+    public ResponseEntity<Object> update(@PathVariable String id, @RequestBody DirectorDTO dto){
+        try {
+            UUID idDirector = UUID.fromString(id);
+            Optional<Director> directorOptional = service.buscarPorId(idDirector);
 
-        if (directorOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
+            if (directorOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            var director = directorOptional.get();
+            director.setName(dto.name());
+            director.setDateBirth(dto.dateBirth());
+            director.setNationality(dto.nationality());
+
+            service.update(director);
+            return ResponseEntity.noContent().build();
+        } catch (RegistroDuplicadoException e){
+            var erroDTO = ErroResposta.conflito(e.getMessage());
+            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
         }
-
-        var director = directorOptional.get();
-        director.setName(dto.name());
-        director.setDateBirth(dto.dateBirth());
-        director.setNationality(dto.nationality());
-
-        service.update(director);
-        return ResponseEntity.noContent().build();
     }
 }
