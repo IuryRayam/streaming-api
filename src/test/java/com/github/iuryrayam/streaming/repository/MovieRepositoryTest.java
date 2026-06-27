@@ -34,7 +34,7 @@ class MovieRepositoryTest {
         movie.setPrice(BigDecimal.valueOf(200));
 
         Director director = directorRepository
-                .findById(UUID.fromString("dd320ac1-fa6d-416f-8b0e-9a074817a350"))
+                .findById(UUID.fromString("a121fc9a-e9ed-4320-97d3-3ad0e4358fb5"))
                 .orElse(null);
 
         movie.setDirector(director);

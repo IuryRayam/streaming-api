@@ -1,7 +1,9 @@
 package com.github.iuryrayam.streaming.service;
 
+import com.github.iuryrayam.streaming.exception.OperacaoInvalidaException;
 import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.repository.DirectorRepository;
+import com.github.iuryrayam.streaming.repository.MovieRepository;
 import com.github.iuryrayam.streaming.validator.DirectorValidator;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,15 @@ public class DirectorService {
 
     private final DirectorRepository repository;
     private final DirectorValidator validator;
+    private final MovieRepository movieRepository;
 
-    public DirectorService(DirectorRepository repository, DirectorValidator validator){
+    public DirectorService(
+            DirectorRepository repository,
+            DirectorValidator validator,
+            MovieRepository movieRepository){
         this.repository = repository;
         this.validator = validator;
+        this.movieRepository = movieRepository;
     }
 
     public void save(Director director){
@@ -38,6 +45,9 @@ public class DirectorService {
     }
 
     public void delete(Director director){
+        if (moviesLigadoDirector(director)){
+            throw new OperacaoInvalidaException("Não pode deletar um diretor que está vinculado a um filme!");
+        }
         repository.delete(director);
     }
 
@@ -55,5 +65,9 @@ public class DirectorService {
         }
 
         return repository.findAll();
+    }
+
+    public boolean moviesLigadoDirector(Director director){
+        return movieRepository.existsByDirector(director);
     }
 }

@@ -59,4 +59,6 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     @Transactional
     @Query(" update Movie set releaseDate = ?1 ")
     void updateReleaseDate(LocalDate newDate);
+
+    boolean existsByDirector(Director director);
 }

@@ -2,6 +2,7 @@ package com.github.iuryrayam.streaming.controller;
 
 import com.github.iuryrayam.streaming.controller.dto.DirectorDTO;
 import com.github.iuryrayam.streaming.controller.dto.ErroResposta;
+import com.github.iuryrayam.streaming.exception.OperacaoInvalidaException;
 import com.github.iuryrayam.streaming.exception.RegistroDuplicadoException;
 import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.service.DirectorService;
@@ -63,16 +64,21 @@ public class DirectorController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id){
-        UUID idDirector = UUID.fromString(id);
-        Optional<Director> directorOptional = service.buscarPorId(idDirector);
+    public ResponseEntity<Object> delete(@PathVariable String id){
+        try {
+            UUID idDirector = UUID.fromString(id);
+            Optional<Director> directorOptional = service.buscarPorId(idDirector);
 
-        if (directorOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
+            if (directorOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            service.delete(directorOptional.get());
+            return ResponseEntity.noContent().build();
+        } catch (OperacaoInvalidaException e){
+            var erroResposta = ErroResposta.respostaPadrao(e.getMessage());
+            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
         }
-
-        service.delete(directorOptional.get());
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
