@@ -5,6 +5,7 @@ import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.repository.DirectorRepository;
 import com.github.iuryrayam.streaming.repository.MovieRepository;
 import com.github.iuryrayam.streaming.validator.DirectorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,20 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class DirectorService {
 
     private final DirectorRepository repository;
     private final DirectorValidator validator;
     private final MovieRepository movieRepository;
-
-    public DirectorService(
-            DirectorRepository repository,
-            DirectorValidator validator,
-            MovieRepository movieRepository){
-        this.repository = repository;
-        this.validator = validator;
-        this.movieRepository = movieRepository;
-    }
 
     public void save(Director director){
         validator.validar(director);

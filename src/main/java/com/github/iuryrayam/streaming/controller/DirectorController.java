@@ -6,6 +6,7 @@ import com.github.iuryrayam.streaming.exception.OperacaoInvalidaException;
 import com.github.iuryrayam.streaming.exception.RegistroDuplicadoException;
 import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.service.DirectorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,13 +18,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("director")
+@RequiredArgsConstructor
 public class DirectorController {
 
     private final DirectorService service;
-
-    public DirectorController(DirectorService service){
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody DirectorDTO dto){
