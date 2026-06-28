@@ -84,7 +84,7 @@ public class DirectorController {
     public ResponseEntity<List<DirectorDTO>> pesquisa(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "nationality", required = false) String nationality){
-        List<Director> pesquisa = service.pesquisa(name, nationality);
+        List<Director> pesquisa = service.pesquisaByExample(name, nationality);
         List<DirectorDTO> list = pesquisa.stream().map(director -> new DirectorDTO(
                 director.getId(),
                 director.getName(),

@@ -6,6 +6,8 @@ import com.github.iuryrayam.streaming.repository.DirectorRepository;
 import com.github.iuryrayam.streaming.repository.MovieRepository;
 import com.github.iuryrayam.streaming.validator.DirectorValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,6 +60,21 @@ public class DirectorService {
         }
 
         return repository.findAll();
+    }
+
+    public List<Director> pesquisaByExample(String name, String nationality){
+        var director = new Director();
+        director.setName(name);
+        director.setNationality(nationality);
+
+        ExampleMatcher exampleMatcher = ExampleMatcher
+                .matching()
+                .withIgnorePaths("id", "dateBirth", "registrationDate")
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Director> directorExample = Example.of(director, exampleMatcher);
+        return repository.findAll(directorExample);
     }
 
     public boolean moviesLigadoDirector(Director director){
