@@ -4,15 +4,20 @@ import com.github.iuryrayam.streaming.model.enums.GenderMovie;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "movie")
 @Data
 @ToString(exclude = "director")
+@EntityListeners(AuditingEntityListener.class)
 public class Movie {
 
     @Id
@@ -44,5 +49,16 @@ public class Movie {
     @ManyToOne
     @JoinColumn(name = "id_director", nullable = false)
     private Director director;
+
+    @CreatedDate
+    @Column(name = "registration_date")
+    private LocalDateTime registrationDate;
+
+    @LastModifiedDate
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
+
+    @Column(name = "id_user")
+    private UUID idUser;
 }
 

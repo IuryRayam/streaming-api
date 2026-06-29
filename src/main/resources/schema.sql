@@ -17,6 +17,9 @@ create table movie(
     studio varchar(150) not null,
     gender varchar(30) not null,
     price numeric(10, 2),
+    registration_date timestamp,
+    update_date timestamp,
+    id_user uuid,
     id_director uuid not null references director(id),
 
     constraint chk_gender check (gender in ('FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE', 'DRAMA'))
