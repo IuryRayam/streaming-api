@@ -23,11 +23,12 @@ import java.util.UUID;
 public class DirectorController {
 
     private final DirectorService service;
+    private final DirectorMapper mapper;
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody @Valid DirectorDTO dto){
         try {
-            var director = dto.toEntity();
+            var director = mapper.toEntity(dto);
             service.save(director);
 
             URI location = ServletUriComponentsBuilder
@@ -46,20 +47,13 @@ public class DirectorController {
     @GetMapping("{id}")
     public ResponseEntity<DirectorDTO> buscarPorId(@PathVariable String id){
         UUID idDirector = UUID.fromString(id);
-        Optional<Director> directorOptional = service.buscarPorId(idDirector);
 
-        if (directorOptional.isPresent()){
-            Director director = directorOptional.get();
-            DirectorDTO dto = new DirectorDTO(
-                    director.getId(),
-                    director.getName(),
-                    director.getDateBirth(),
-                    director.getNationality());
-
-            return ResponseEntity.ok(dto);
-        }
-
-        return ResponseEntity.notFound().build();
+        return service
+                .buscarPorId(idDirector)
+                .map(director -> {
+                    DirectorDTO dto = mapper.toDTO(director);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet( () -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("{id}")
@@ -85,12 +79,10 @@ public class DirectorController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "nationality", required = false) String nationality){
         List<Director> pesquisa = service.pesquisaByExample(name, nationality);
-        List<DirectorDTO> list = pesquisa.stream().map(director -> new DirectorDTO(
-                director.getId(),
-                director.getName(),
-                director.getDateBirth(),
-                director.getNationality()
-        )).toList();
+        List<DirectorDTO> list = pesquisa
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
         return ResponseEntity.ok(list);
     }
 

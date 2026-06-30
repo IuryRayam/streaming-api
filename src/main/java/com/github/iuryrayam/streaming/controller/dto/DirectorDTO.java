@@ -21,12 +21,4 @@ public record DirectorDTO(
         @Size(min = 2, max = 50, message = "campo fora do tamanho padrão")
         String nationality
 ) {
-
-    public Director toEntity(){
-        Director director = new Director();
-        director.setName(name);
-        director.setDateBirth(dateBirth);
-        director.setNationality(nationality);
-        return director;
-    }
 }
