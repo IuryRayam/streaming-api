@@ -1,4 +1,4 @@
-package com.github.iuryrayam.streaming.controller;
+package com.github.iuryrayam.streaming.controller.mapper;
 
 import com.github.iuryrayam.streaming.controller.dto.DirectorDTO;
 import com.github.iuryrayam.streaming.model.Director;

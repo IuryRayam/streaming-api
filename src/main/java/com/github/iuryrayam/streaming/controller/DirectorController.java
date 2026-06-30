@@ -2,6 +2,7 @@ package com.github.iuryrayam.streaming.controller;
 
 import com.github.iuryrayam.streaming.controller.dto.DirectorDTO;
 import com.github.iuryrayam.streaming.controller.dto.ErroResposta;
+import com.github.iuryrayam.streaming.controller.mapper.DirectorMapper;
 import com.github.iuryrayam.streaming.exception.OperacaoInvalidaException;
 import com.github.iuryrayam.streaming.exception.RegistroDuplicadoException;
 import com.github.iuryrayam.streaming.model.Director;
