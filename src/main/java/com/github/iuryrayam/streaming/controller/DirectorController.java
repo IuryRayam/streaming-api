@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("director")
 @RequiredArgsConstructor
-public class DirectorController {
+public class DirectorController implements GenericController {
 
     private final DirectorService service;
     private final DirectorMapper mapper;
@@ -32,11 +32,7 @@ public class DirectorController {
             var director = mapper.toEntity(dto);
             service.save(director);
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(director.getId())
-                    .toUri();
+            URI location = gerarHeaderLocation(director.getId());
 
             return ResponseEntity.created(location).build();
         } catch (RegistroDuplicadoException e){

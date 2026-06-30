@@ -1,5 +1,6 @@
 package com.github.iuryrayam.streaming.service;
 
+import com.github.iuryrayam.streaming.model.Movie;
 import com.github.iuryrayam.streaming.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,4 +10,8 @@ import org.springframework.stereotype.Service;
 public class MovieService {
 
     private final MovieRepository repository;
+
+    public Movie save(Movie movie){
+        return repository.save(movie);
+    }
 }
