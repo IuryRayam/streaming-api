@@ -1,17 +1,13 @@
 package com.github.iuryrayam.streaming.controller;
 
 import com.github.iuryrayam.streaming.controller.dto.DirectorDTO;
-import com.github.iuryrayam.streaming.controller.dto.ErroResposta;
 import com.github.iuryrayam.streaming.controller.mapper.DirectorMapper;
-import com.github.iuryrayam.streaming.exception.OperacaoInvalidaException;
-import com.github.iuryrayam.streaming.exception.RegistroDuplicadoException;
 import com.github.iuryrayam.streaming.model.Director;
 import com.github.iuryrayam.streaming.service.DirectorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -27,18 +23,13 @@ public class DirectorController implements GenericController {
     private final DirectorMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid DirectorDTO dto){
-        try {
-            var director = mapper.toEntity(dto);
-            service.save(director);
+    public ResponseEntity<Void> save(@RequestBody @Valid DirectorDTO dto){
+        var director = mapper.toEntity(dto);
+        service.save(director);
 
-            URI location = gerarHeaderLocation(director.getId());
+        URI location = gerarHeaderLocation(director.getId());
 
-            return ResponseEntity.created(location).build();
-        } catch (RegistroDuplicadoException e){
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("{id}")
@@ -54,21 +45,16 @@ public class DirectorController implements GenericController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> delete(@PathVariable String id){
-        try {
-            UUID idDirector = UUID.fromString(id);
-            Optional<Director> directorOptional = service.buscarPorId(idDirector);
+    public ResponseEntity<Void> delete(@PathVariable String id){
+        UUID idDirector = UUID.fromString(id);
+        Optional<Director> directorOptional = service.buscarPorId(idDirector);
 
-            if (directorOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            service.delete(directorOptional.get());
-            return ResponseEntity.noContent().build();
-        } catch (OperacaoInvalidaException e){
-            var erroResposta = ErroResposta.respostaPadrao(e.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
+        if (directorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        service.delete(directorOptional.get());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -84,25 +70,20 @@ public class DirectorController implements GenericController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(@PathVariable String id, @RequestBody DirectorDTO dto){
-        try {
-            UUID idDirector = UUID.fromString(id);
-            Optional<Director> directorOptional = service.buscarPorId(idDirector);
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody DirectorDTO dto){
+        UUID idDirector = UUID.fromString(id);
+        Optional<Director> directorOptional = service.buscarPorId(idDirector);
 
-            if (directorOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            var director = directorOptional.get();
-            director.setName(dto.name());
-            director.setDateBirth(dto.dateBirth());
-            director.setNationality(dto.nationality());
-
-            service.update(director);
-            return ResponseEntity.noContent().build();
-        } catch (RegistroDuplicadoException e){
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
+        if (directorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        var director = directorOptional.get();
+        director.setName(dto.name());
+        director.setDateBirth(dto.dateBirth());
+        director.setNationality(dto.nationality());
+
+        service.update(director);
+        return ResponseEntity.noContent().build();
     }
 }
