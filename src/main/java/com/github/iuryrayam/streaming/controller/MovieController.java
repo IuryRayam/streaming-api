@@ -37,4 +37,14 @@ public class MovieController implements GenericController {
                     return ResponseEntity.ok(dto);
                 }).orElseGet( () -> ResponseEntity.notFound().build() );
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> delete(@PathVariable String id){
+        return service
+                .buscarPorId(UUID.fromString(id))
+                .map(movie -> {
+                    service.delete(movie);
+                    return ResponseEntity.noContent().build();
+                }).orElseGet( () -> ResponseEntity.notFound().build() );
+    }
 }

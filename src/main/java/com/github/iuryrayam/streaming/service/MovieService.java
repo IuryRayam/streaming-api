@@ -21,4 +21,8 @@ public class MovieService {
     public Optional<Movie> buscarPorId(UUID id){
         return repository.findById(id);
     }
+
+    public void delete(Movie movie){
+        repository.delete(movie);
+    }
 }
